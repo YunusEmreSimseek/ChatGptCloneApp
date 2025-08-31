@@ -15,11 +15,11 @@ final class OpenAIService: AIServiceProtocol {
         openAI = .init(apiToken: apiKey)
     }
 
-    func sendMessage(_ message: String) async throws -> String {
-        let chatMessage = ChatQuery.ChatCompletionMessageParam(role: .user, content: message)
+    func sendMessage(_ messages: [MessageModel], _ aiModel: AIModel) async throws -> String {
+        let chatMessages = convertToMessages(messages)
         let query = ChatQuery(
-            messages: [chatMessage!],
-            model: .gpt4_o,
+            messages: chatMessages,
+            model: aiModel.rawValue,
             maxCompletionTokens: 200
         )
         let result = try await openAI.chats(query: query)
@@ -30,9 +30,21 @@ final class OpenAIService: AIServiceProtocol {
         }
     }
 
-//    private func convertToMessages(_ messages: [String]) -> [ChatQuery.ChatCompletionMessageParam] {
-//        var chatMessages: [ChatQuery.ChatCompletionMessageParam] = []
-//        let lastMessages = messages.suffix(5)
-//        return chatMessages
-//    }
+    private func convertToMessages(_ messages: [MessageModel]) -> [ChatQuery.ChatCompletionMessageParam] {
+        var chatMessages: [ChatQuery.ChatCompletionMessageParam] = []
+        let lastMessages = messages.suffix(5)
+        for message in lastMessages {
+            if message.role == .user {
+                let chatMessage = ChatQuery.ChatCompletionMessageParam(role: .user, content: message.text)
+                chatMessages.append(chatMessage!)
+            } else if message.role == .assistant {
+                let chatMessage = ChatQuery.ChatCompletionMessageParam(role: .assistant, content: message.text)
+                chatMessages.append(chatMessage!)
+            } else {
+                let chatMessage = ChatQuery.ChatCompletionMessageParam(role: .system, content: message.text)
+                chatMessages.append(chatMessage!)
+            }
+        }
+        return chatMessages
+    }
 }

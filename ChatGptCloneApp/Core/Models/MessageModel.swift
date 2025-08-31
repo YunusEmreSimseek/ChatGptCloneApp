@@ -14,7 +14,10 @@ struct MessageModel: Equatable, Hashable {
 }
 
 extension MessageModel {
-    static let dummyMessage = MessageModel(role: .user, text: "Hello how are you ?")
+    static let dummyUserMessage = MessageModel(role: .user, text: "Hello how are you ?")
+    static let dummyAssistantMessage = MessageModel(role: .assistant, text: "Hi, i am fine how about you ?")
+    static let dummyUserMessage2 = MessageModel(role: .user, text: "Thanks, i am very well too.")
+    static let dummyConversation = [dummyUserMessage, dummyAssistantMessage, dummyUserMessage2]
 }
 
 enum ChatRole: String {

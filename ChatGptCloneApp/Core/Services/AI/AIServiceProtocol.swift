@@ -8,5 +8,5 @@
 import Foundation
 
 protocol AIServiceProtocol {
-    func sendMessage(_ message: String) async throws -> String
+    func sendMessage(_ messages: [MessageModel], _ aiModel: AIModel) async throws -> String
 }

@@ -9,17 +9,20 @@ import SwiftUI
 
 @Observable
 final class HomeViewModel {
-    var exampleText: String = "hello brothers"
     var textInputValue: String = ""
     var isMenuOpen: Bool = false
-    var messages: [MessageModel] = [.dummyMessage]
-    var responseText: String = ""
+    var messages: [MessageModel] = []
     var isLoading: Bool = false
+    var selectedAIModel: AIModel = .gpt5
 
     private let _aiService: AIServiceProtocol
 
     init(aiService: AIServiceProtocol) {
         _aiService = aiService
+
+        if AppMode.isPreview {
+            messages = MessageModel.dummyConversation
+        }
     }
 
     func sendMessage() async {
@@ -28,10 +31,11 @@ final class HomeViewModel {
         isLoading = true
         defer { isLoading = false }
         do {
-            let response = try await _aiService.sendMessage(textInputValue)
+            let response = try await _aiService.sendMessage(messages, selectedAIModel)
+            textInputValue.removeAll()
             messages.append(MessageModel(role: .assistant, text: response))
         } catch {
-            messages.append(MessageModel(role: .system, text: "Error occurred while processing your request."))
+            messages.append(MessageModel(role: .system, text: LocaleKeys.Error.regular))
         }
     }
 }
