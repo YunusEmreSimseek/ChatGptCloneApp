@@ -148,16 +148,7 @@ private struct TopBarLeadingItems: View {
 private struct SideMenu: View {
     @Binding var isMenuOpen: Bool
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Menü").font(.title2.bold())
-                Spacer()
-                Button(action: { isMenuOpen.toggle() }) {
-                    Image(systemName: "xmark").font(.system(size: 16, weight: .semibold))
-                }
-            }
-            .padding(.bottom, 8)
-        }
+        VStack(alignment: .leading, spacing: 12) {}
     }
 }
 

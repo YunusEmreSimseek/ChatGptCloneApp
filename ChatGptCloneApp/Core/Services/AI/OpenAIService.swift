@@ -26,7 +26,7 @@ final class OpenAIService: AIServiceProtocol {
         if let output = result.choices.first?.message.content {
             return output
         } else {
-            return "⚠️ Yanıt alınamadı"
+            return "⚠️ No Response"
         }
     }
 

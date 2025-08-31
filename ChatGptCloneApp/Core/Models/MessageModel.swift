@@ -14,7 +14,7 @@ struct MessageModel: Equatable, Hashable {
 }
 
 extension MessageModel {
-    static let dummyMessage = MessageModel(role: .user, text: "Selam naber ?")
+    static let dummyMessage = MessageModel(role: .user, text: "Hello how are you ?")
 }
 
 enum ChatRole: String {
