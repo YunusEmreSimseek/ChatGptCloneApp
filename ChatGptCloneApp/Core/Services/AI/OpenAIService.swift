@@ -20,7 +20,7 @@ final class OpenAIService: AIServiceProtocol {
         let query = ChatQuery(
             messages: chatMessages,
             model: aiModel.rawValue,
-            maxCompletionTokens: 200
+            maxCompletionTokens: 1000
         )
         let result = try await openAI.chats(query: query)
         if let output = result.choices.first?.message.content {

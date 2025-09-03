@@ -8,17 +8,18 @@
 import Foundation
 
 enum LocaleKeys {
-    
     enum Dummy {
         static let userName = "Yunus Emre Şimşek"
     }
-    
+
     enum App {
         static let name = "ChatGPT"
     }
 
     enum Button {
         static let delete = "Delete"
+        static let cancel = "Cancel"
+        static let save = "Save"
     }
 
     enum Home {
@@ -28,6 +29,11 @@ enum LocaleKeys {
             static let rename = "Rename"
             static let report = "Report"
             static let archive = "Archive"
+
+            enum DeleteDialog {
+                static let title = "Delete Chat"
+                static let message = "his can't be undone. Visit your settings to delete any memories saved during this chat."
+            }
         }
 
         enum SideMenu {

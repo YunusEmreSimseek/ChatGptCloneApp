@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AIModel: String, CaseIterable, Hashable {
+enum AIModel: String, CaseIterable, Hashable, Codable {
     case gpt4_o = "gpt-4o"
     case gpt5 = "gpt-5"
     case gpt5_nano = "gpt-5-nano"
