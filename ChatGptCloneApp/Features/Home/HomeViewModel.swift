@@ -12,11 +12,12 @@ import SwiftUI
 final class HomeViewModel {
     var textInputValue: String = ""
     var isSideMenuOpen: Bool = false
-    var isLoading: Bool = false
     var chats: [ChatModel] = []
     var selectedChat: ChatModel = .init()
     var showDeleteInformationDialog: Bool = false
     var isPremiumUser: Bool = false
+    var isSettingsOpen: Bool = false
+    var isLoading: Bool = false
 
     private let _aiService: AIServiceProtocol
     private let _userDefaultsService: IUserDefaultService

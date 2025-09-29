@@ -22,6 +22,67 @@ enum LocaleKeys {
         static let save = "Save"
     }
 
+    enum Settings {
+        static let navTitle = "Settings"
+
+        enum Account {
+            static let title = "Account"
+            static let email = "Email"
+            static let phoneNumber = "Phone Number"
+            static let subscription = "Subscribe"
+            static let upgrade = "Upgrade to ChatGPT Pro"
+            static let restorePruchases = "Restore Purchases"
+            static let personalization = "Personalization"
+            static let notifications = "Notifications"
+            static let connectors = "Connectors"
+            static let dataControls = "Data Controls"
+            static let archivedChats = "Archived Chats"
+            static let security = "Security"
+        }
+
+        enum App {
+            static let language = "App Language"
+            static let title = "App"
+            static let dictation = "Auto Send with Dictation"
+            static let appearance = "Appearance"
+            static let color = "Accent Color"
+            static let additionalModels = "Show additional models"
+            static let haptic = "Haptic Feedback"
+            static let spelling = "Correct Spelling Automatically"
+            static let map = "Map Provider"
+        }
+
+        enum Speech {
+            static let title = "Speech"
+            static let mainLanguage = "Main Language"
+            static let subTitle = "For best reuslts, select the language you mainly speak. If it's not listed, it may still be supported via auto-detection."
+        }
+
+        enum VoiceMode {
+            static let title = "Voice Mode"
+            static let voice = "Voice"
+            static let backgroundConversations = "Background conversations"
+            static let subTitle = "Background conversations keep the conversation going in other apps or while your screen is off. Learn more"
+            static let subTitleLink = "Learn more"
+            static let linkURL = "https://help.openai.com"
+        }
+
+        enum Suggestion {
+            static let title = "Suggestions"
+            static let autocomplete = "Autocomplete"
+            static let trendingSearches = "Trending Searches"
+            static let followSuggestions = "Follow-up Suggestions"
+        }
+
+        enum About {
+            static let title = "About"
+            static let helpCenter = "Help Center"
+            static let terms = "Terms of Use"
+            static let privacyPolicy = "Privacy Policy Center"
+            static let version = "ChatGPT for iOS"
+        }
+    }
+
     enum Home {
         static let inputPlaceholder = "Type something..."
         enum TrailingMenu {
@@ -29,6 +90,7 @@ enum LocaleKeys {
             static let rename = "Rename"
             static let report = "Report"
             static let archive = "Archive"
+            static let premium = "Premium"
 
             enum DeleteDialog {
                 static let title = "Delete Chat"

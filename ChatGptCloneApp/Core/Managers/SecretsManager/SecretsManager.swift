@@ -8,7 +8,7 @@
 import Foundation
 
 final class SecretsManager {
-    private init(){}
+    private init() {}
     static func getAPIKey(_ secret: Secrets) -> String {
         guard let key = Bundle.main.infoDictionary?[secret.rawValue] as? String else {
             fatalError("API key not found in Info.plist")

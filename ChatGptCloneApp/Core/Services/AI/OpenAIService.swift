@@ -16,6 +16,7 @@ final class OpenAIService: AIServiceProtocol {
     }
 
     func sendMessage(_ messages: [MessageModel], _ aiModel: AIModel) async throws -> String {
+        guard !messages.isEmpty else { throw AIServiceError.emptyMessages }
         let chatMessages = convertToMessages(messages)
         let query = ChatQuery(
             messages: chatMessages,
@@ -23,10 +24,11 @@ final class OpenAIService: AIServiceProtocol {
             maxCompletionTokens: 1000
         )
         let result = try await openAI.chats(query: query)
-        if let output = result.choices.first?.message.content {
+        guard let choice = result.choices.first else { throw AIServiceError.noChoices }
+        if let output = choice.message.content, !output.isEmpty {
             return output
         } else {
-            return "⚠️ No Response"
+            throw AIServiceError.noContentInChoice
         }
     }
 

@@ -8,82 +8,81 @@
 import SwiftUI
 
 struct HomeView: View {
-    @State private var viewModel: HomeViewModel
-
-    init() {
-        _viewModel = State(wrappedValue: .init(aiService: OpenAIService(), userDefaultsService: UserDefaultsService()))
-    }
+    @State private var viewModel: HomeViewModel = .init(aiService: OpenAIService(), userDefaultsService: UserDefaultsService())
 
     var body: some View {
         @Bindable var vm = viewModel
-        ZStack(alignment: .leading) {
-            VStack(spacing: .dynamicHeight(height: 0.03)) {
-                ScrollView {
-                    MessagesList(messages: vm.selectedChat.messages)
-                }
-                .padding()
-
-                if viewModel.selectedChat.messages.isEmpty {
-                    SuggestionItems()
-                }
-
-                BottomChatInputBar(textInputValue: $vm.textInputValue, onSendMessage: vm.sendMessage)
-            }
-
-            if vm.isSideMenuOpen {
-                Color.secondary
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            vm.isSideMenuOpen.toggle()
-                        }
+        GeoContainer { size in
+            ZStack(alignment: .leading) {
+                VStack(spacing: size.dynamicHeight(0.03)) {
+                    ScrollView {
+                        messagesList(vm.selectedChat.messages)
                     }
-            }
-            SideMenu(
-                chats: vm.chats,
-                selectedChat: $vm.selectedChat,
-                isSideMenuOpen: vm.isSideMenuOpen
-            ).animation(.easeInOut, value: vm.isSideMenuOpen)
-        }
-        .modifier(CenterLoadingViewModifier(isLoading: vm.isLoading))
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                TopBarLeadingItems(
-                    isSideMenuOpen: $vm.isSideMenuOpen,
-                    selectedChat: $vm.selectedChat,
-                    isPremiumUser: vm.isPremiumUser
-                )
-            }
-            ToolbarItem(placement: .topBarTrailing) {
-                TopBarTrailingItems(
-                    showDeleteInformationDialog: $vm.showDeleteInformationDialog,
-                    onCreateNewChat: vm.createNewChat,
-                    saveChats: vm.saveChats
-                )
-            }
+                    .padding()
 
-            if !vm.isPremiumUser && vm.selectedChat.messages.isEmpty {
-                ToolbarItem(placement: .principal) {
-                    UpgradeCard()
+                    if viewModel.selectedChat.messages.isEmpty {
+                        suggestionItems
+                    }
+
+                    BottomChatInputBar(textInputValue: $vm.textInputValue, onSendMessage: vm.sendMessage)
+                } // VStack
+
+                if vm.isSideMenuOpen {
+                    Color.secondary
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut) {
+                                vm.isSideMenuOpen.toggle()
+                            }
+                        }
                 }
-            }
-        }
-        .confirmationDialog(LocaleKeys.Home.TrailingMenu.DeleteDialog.title, isPresented: $vm.showDeleteInformationDialog, titleVisibility: .visible, actions: {
-            Button(LocaleKeys.Button.delete, role: .destructive) { vm.deleteChat() }
-            Button(LocaleKeys.Button.cancel, role: .cancel) {}
-        }, message: {
-            Text(LocaleKeys.Home.TrailingMenu.DeleteDialog.message)
-        })
-    }
-}
+                SideMenu(
+                    chats: vm.chats,
+                    selectedChat: $vm.selectedChat,
+                    isSideMenuOpen: vm.isSideMenuOpen,
+                    isSettingsOpen: $vm.isSettingsOpen
+                ).animation(.easeInOut, value: vm.isSideMenuOpen)
+            } // ZStack
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    TopBarLeadingItems(
+                        isSideMenuOpen: $vm.isSideMenuOpen,
+                        selectedChat: $vm.selectedChat,
+                        isPremiumUser: vm.isPremiumUser
+                    )
+                }
 
-private struct MessagesList: View {
-    let messages: [MessageModel]
-    var body: some View {
+                ToolbarItem(placement: .topBarTrailing) {
+                    TopBarTrailingItems(
+                        showDeleteInformationDialog: $vm.showDeleteInformationDialog,
+                        isPremiumUser: $vm.isPremiumUser,
+                        onCreateNewChat: vm.createNewChat,
+                        saveChats: vm.saveChats
+                    )
+                }
+                if !vm.isPremiumUser, vm.selectedChat.messages.isEmpty, !vm.isSideMenuOpen {
+                    ToolbarItem(placement: .principal) {
+                        upgradeCard()
+                    }
+                }
+            } // toolbar
+            .confirmationDialog(LocaleKeys.Home.TrailingMenu.DeleteDialog.title, isPresented: $vm.showDeleteInformationDialog, titleVisibility: .visible, actions: {
+                Button(LocaleKeys.Button.delete, role: .destructive) { vm.deleteChat() }
+                Button(LocaleKeys.Button.cancel, role: .cancel) {}
+            }, message: {
+                Text(LocaleKeys.Home.TrailingMenu.DeleteDialog.message)
+            })
+            .sheet(isPresented: $vm.isSettingsOpen, content: { SettingsView(isSettingsOpen: $vm.isSettingsOpen) })
+        } // GeoContainer
+    } // body
+} // HomeView
+
+extension HomeView {
+    private func messagesList(_ messages: [MessageModel]) -> some View {
         VStack(alignment: .leading, spacing: .normal) {
             ForEach(messages, id: \.self) { message in
                 if message.role == .user {
-                    UserMessageCard(message: message.text)
+                    userMessageCard(message.text)
                 } else if message.role == .assistant {
                     Text(message.text)
                 } else {
@@ -93,16 +92,18 @@ private struct MessagesList: View {
             }
         }
     }
-}
 
-#Preview {
-    NavigationView {
-        HomeView()
+    private func userMessageCard(_ message: String) -> some View {
+        HStack {
+            Spacer()
+            Text(message)
+                .padding(.low)
+                .rectThinCard()
+                .frame(maxWidth: .dynamicWidth(width: 0.7), alignment: .trailing)
+        }
     }
-}
 
-private struct UpgradeCard: View {
-    var body: some View {
+    private func upgradeCard() -> some View {
         HStack(spacing: .zero) {
             Image(systemName: "sparkles")
             Text("Upgrade")
@@ -110,5 +111,11 @@ private struct UpgradeCard: View {
         .foregroundStyle(.indigo)
         .padding(.veryLow)
         .rectThinCard(bgColor: .indigo.opacity(0.2))
+    }
+}
+
+#Preview {
+    NavigationView {
+        HomeView()
     }
 }
